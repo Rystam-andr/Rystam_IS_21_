@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<title>Модуль обработки изображений</title>
+<style>
+body { font-family: Arial; margin: 20px; }
+h1 { color: #333; }
+form { margin-bottom: 20px; }
+.error { color: red; }
+img { max-width: 200px; margin: 10px; }
+</style>
+</head>
+<body>
+
+<h1>Модуль обработки изображений</h1>
+
+<h2>Загрузить изображение</h2>
+<form action="/upload/" method="post" enctype="multipart/form-data">
+<label>Имя:</label><br/>
+<input type="text" name="name" required/><br/>
+<label>Файл:</label><br/>
+<input type="file" name="file" accept="image/*" required/><br/>
+<button type="submit">Загрузить</button>
+</form>
+
+{% if error %}
+<p class="error">{{ error }}</p>
+{% endif %}
+
+<h2>Все изображения</h2>
+{% for img in images %}
+<div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+<p><strong>{{ img.name }}</strong></p>
+<img src="{{ url_for('static', path=img.file_path) }}" alt="{{ img.name }}"/>
+<p>Размер: {{ img.size }} байт</p>
+<p>Разрешение: {{ img.width }}x{{ img.height }}</p>
+<p>Тип: {{ img.type }}</p>
+<p>Добавлено: {{ img.date_added }}</p>
+
+<a href="/info/{{ img.id }}">Подробнее</a>
+
+<form action="/rename/{{ img.id }}" method="post" style="margin-top:10px;">
+<input type="text" name="new_name" placeholder="Новое имя" required/>
+<button type="submit">Переименовать</button>
+</form>
+</div>
+{% endfor %}
+
+{% if show_info and info_image %}
+<h2>Информация о "{{ info_image.name }}"</h2>
+<ul>
+<li>Размер файла: {{ info_image.size }} байт</li>
+<li>Разрешение: {{ info_image.width }}x{{ info_image.height }}</li>
+<li>Тип файла: {{ info_image.type }}</li>
+<li>Дата добавления: {{ info_image.date_added }}</li>
+</ul>
+<a href="/">Вернуться к списку</a>
+{% endif %}
+
+</body>
+</html>

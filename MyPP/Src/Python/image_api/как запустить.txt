@@ -1,0 +1,1 @@
+вставить в ТЕРМИНАЛ: uvicorn main:app --reload
